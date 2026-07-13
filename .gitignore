@@ -1,0 +1,10 @@
+#.NET
+backend/**/bin/
+backend/**/obj/
+
+# IDE
+.vs/
+.vscode/
+*.user
+
+
