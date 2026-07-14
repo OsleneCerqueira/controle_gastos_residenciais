@@ -1,15 +1,18 @@
 using ControlSpending.Database;
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
+using System.Text.Json.Serialization;
 
 
 Env.Load();
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddControllers().AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    }); // Configures controllers and represents enumeration values as text in JSON.
+
 builder.Services.AddOpenApi();
 
 var connectionString = builder.Configuration.GetConnectionString("AppDbConnectionString");

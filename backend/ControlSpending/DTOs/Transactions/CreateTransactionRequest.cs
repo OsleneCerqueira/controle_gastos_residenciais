@@ -13,7 +13,7 @@ public class CreateTransactionRequest
     public string Description { get; set; } = string.Empty;
 
 
-    [Range(typeof(decimal),"0.01","9999999999999.99", ErrorMessage = "O valor deve ser maior que zero.")]
+    [Range(typeof(decimal),"0.01","9999999999999.99", ParseLimitsInInvariantCulture = true, ErrorMessage = "O valor deve ser maior que zero.")]
     public decimal Value { get; set; }
 
 
