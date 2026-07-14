@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using ControlSpending.Models;
 namespace ControlSpending.Database;
+
 
 /// <summary>
 /// Creates the context responsible for communication with the database. 
@@ -9,7 +11,8 @@ namespace ControlSpending.Database;
 /// <param name="options">
 /// Settings used to access the database. 
 /// /// </param>
-public class AppDbContext : DbContext{
+public class AppDbContext : DbContext
+{
     public AppDbContext(DbContextOptions<AppDbContext> options): base(options){}
 
     public DbSet<Person> People => Set<Person>();

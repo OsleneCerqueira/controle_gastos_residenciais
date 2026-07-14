@@ -1,10 +1,12 @@
 #.NET
 backend/**/bin/
 backend/**/obj/
+backend/**/.env
 
 # IDE
 .vs/
 .vscode/
 *.user
+
 
 
