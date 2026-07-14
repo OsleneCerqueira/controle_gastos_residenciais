@@ -2,6 +2,8 @@ using ControlSpending.Database;
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
 using System.Text.Json.Serialization;
+using ControlSpending.Services;
+using ControlSpending.Services.Interfaces;
 
 
 Env.Load();
@@ -17,6 +19,8 @@ builder.Services.AddOpenApi();
 
 var connectionString = builder.Configuration.GetConnectionString("AppDbConnectionString");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+builder.Services.AddScoped<ISummaryService, SummaryService>();// Registers the report service for dependency injection.
 
 var app = builder.Build();
 
