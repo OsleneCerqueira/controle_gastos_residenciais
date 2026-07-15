@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { getOverallSummary, getPeopleSummary } from "../api/peopleApi";
 import { PersonSummaryCard } from "../components/PersonSummaryCard";
 import { OverallSummaryCard } from "../components/OverallSummaryCard";
+import { Link } from "react-router";
 
 import type { OverallSummary, PersonSummary } from "../types/person";
 
@@ -51,6 +52,11 @@ export function PeoplePage() {
                 <p className={styles.description}>
                     Acompanhe as receitas, despesas e o saldo de cada pessoa.
                 </p>
+
+                <Link to="/people/new" className={styles.addPersonLink}>
+                    Adicionar pessoa
+                </Link>
+
             </header>
 
             <section className={styles.peopleSection} aria-labelledby="people-list-title">

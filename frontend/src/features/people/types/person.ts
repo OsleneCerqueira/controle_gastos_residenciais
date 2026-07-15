@@ -17,3 +17,8 @@ export interface OverallSummary {
   totalExpenses: number;
   netBalance: number;
 }
+
+export interface CreatePersonRequest {
+  name: string;
+  age: number;
+}

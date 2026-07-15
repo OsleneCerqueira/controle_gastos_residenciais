@@ -1,4 +1,4 @@
-import type { Person, PersonSummary, OverallSummary, } from "../types/person";
+import type { Person, PersonSummary, OverallSummary, CreatePersonRequest } from "../types/person";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -62,4 +62,28 @@ export async function getOverallSummary(): Promise<OverallSummary> {
   const overallSummary: OverallSummary = await response.json();
 
   return overallSummary;
+}
+
+
+
+export async function createPerson(
+  person: CreatePersonRequest): Promise<void> {
+  if (!apiUrl) {
+    throw new Error("A variável VITE_API_URL não foi configurada.");
+  }
+
+  const response = await fetch(`${apiUrl}${peopleEndpoint}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(person),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Não foi possível cadastrar a pessoa. Status: ${response.status}.`
+    );
+  }
 }
