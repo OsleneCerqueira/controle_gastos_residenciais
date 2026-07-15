@@ -1,13 +1,7 @@
-function App() {
-  return (
-    <main>
-      <h1>Controle de Gastos</h1>
+import { PeoplePage } from "./features/people/pages/PeoplePage";
 
-      <p>
-        Sistema de controle de gastos residenciais
-      </p>
-    </main>
-  );
+function App() {
+  return <PeoplePage />;
 }
 
 export default App;
