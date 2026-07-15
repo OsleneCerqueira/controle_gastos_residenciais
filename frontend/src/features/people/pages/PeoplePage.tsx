@@ -1,58 +1,87 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { checkApiConnection } from "../../../shared/api/checkApiConnection";
+import { getPeople, getPeopleSummary } from "../api/peopleApi";
 
-type ConnectionStatus = | "idle" | "loading" | "success" | "error";
+import type { Person, PersonSummary } from "../types/person";
+
+import styles from "./PeoplePage.module.css";
 
 export function PeoplePage() {
+    const [peopleSummary, setPeopleSummary] = useState<PersonSummary[]>([]);
 
-    const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>("idle");
+    const [isLoading, setIsLoading] = useState(true);
 
-    const [message, setMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
 
-    async function handleCheckConnection(): Promise<void> {
-        setConnectionStatus("loading");
+    useEffect(() => {
+        async function loadPeopleSummary(): Promise<void> {
+            try {
+                const summaryData = await getPeopleSummary();
 
-        setMessage("Verificando a conexão com a API...");
+                setPeopleSummary(summaryData);
+            } catch (error) {
+                const message = error instanceof Error ? error.message : "Ocorreu um erro ao buscar as pessoas.";
 
-        try {
-            await checkApiConnection();
-
-            setConnectionStatus("success");
-
-            setMessage("Conexão com a API realizada com sucesso.");
-        } catch (error) {
-            setConnectionStatus("error");
-            const errorMessage = error instanceof Error ? error.message : "Não foi possível acessar a API.";
-
-            setMessage(errorMessage);
+                setErrorMessage(message);
+            } finally {
+                setIsLoading(false);
+            }
         }
-    }
+
+        loadPeopleSummary();
+    }, []);
+
     return (
-        <main>
-            <header>
+        <main className={styles.page}>
+            <header className={styles.header}>
+                <p className={styles.eyebrow}>
+                    Visão financeira
+                </p>
 
-                <h1>Balanço por pessoa</h1>
+                <h1 className={styles.title}> Balanço por pessoa </h1>
 
-                <p> Acompanhe as receitas, despesas e o saldo de cada pessoa.</p>
+                <p className={styles.description}>
+                    Acompanhe as receitas, despesas e o saldo de cada pessoa.
+                </p>
             </header>
 
-            <section aria-labelledby="people-list-title">
-                <h2 id="people-list-title"> Pessoas </h2>
+            <section className={styles.peopleSection} aria-labelledby="people-list-title">
+                <h2 id="people-list-title" className={styles.sectionTitle}>
+                    Pessoas
+                </h2>
 
-                <p> Lista de pessoas</p>
-            </section>
-            <section aria-labelledby="api-connection-title">
-                <h2 id="api-connection-title"> Comunicação com a API</h2>
+                {isLoading && (
+                    <p className={styles.statusMessage}>Carregando resumo financeiro...</p>
+                )}
 
-                <button type="button" onClick={handleCheckConnection}>
-                    {connectionStatus === "loading" ? "Verificando..." : "Testar conexão"}
-                </button>
-
-                {message && (
-                    <p role={ connectionStatus === "error"? "alert" : "status" }>
-                        {message}
+                {errorMessage && (
+                    <p className={styles.errorMessage} role="alert" >
+                        {errorMessage}
                     </p>
+                )}
+
+                {!isLoading && !errorMessage && peopleSummary.length === 0 && (
+                    <p className={styles.statusMessage}>Nenhuma pessoa foi cadastrada.</p>
+                )}
+
+                {!isLoading && !errorMessage && peopleSummary.length > 0 && (
+                    <ul className={styles.peopleList}>
+                        {peopleSummary.map((person) => (
+                            <li key={person.personId} className={styles.personItem}>
+                                <strong className={styles.personName}>
+                                    {person.personName}
+                                </strong>
+
+                                <div className={styles.financialData}>
+                                    <span>Receitas: {person.totalRevenue}</span>
+
+                                    <span> Despesas: {person.totalExpenses}</span>
+
+                                    <span>Saldo: {person.balance}</span>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
                 )}
             </section>
         </main>
