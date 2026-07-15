@@ -1,0 +1,55 @@
+.card {
+  margin-top: 32px;
+  padding: 24px;
+  color: #ffffff;
+  border-radius: 16px;
+  background-color: #111827;
+}
+
+.label {
+  display: block;
+  color: #d1d5db;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.card > strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 2rem;
+}
+
+.financialSummary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 24px 0 0;
+}
+
+.financialSummary div {
+  display: grid;
+  gap: 6px;
+}
+
+.financialSummary dt {
+  color: #d1d5db;
+  font-size: 0.75rem;
+}
+
+.financialSummary dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.positiveBalance {
+  color: #6ee7b7;
+}
+
+.negativeBalance {
+  color: #fca5a5;
+}
+
+.neutralBalance {
+  color: #ffffff;
+}

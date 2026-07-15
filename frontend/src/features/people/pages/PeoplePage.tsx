@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 
-import { formatCurrency } from "../../../shared/utils/formatCurrency";
-
 import { getOverallSummary, getPeopleSummary } from "../api/peopleApi";
 import { PersonSummaryCard } from "../components/PersonSummaryCard";
+import { OverallSummaryCard } from "../components/OverallSummaryCard";
 
 import type { OverallSummary, PersonSummary } from "../types/person";
 
@@ -83,36 +82,7 @@ export function PeoplePage() {
                     </ul>
                 )}
             </section>
-            {overallSummary && (
-                <section className={styles.overallSummary}>
-                    <h2>Resumo geral</h2>
-
-                    <div className={styles.overallValues}>
-                        <div>
-                            <span>Receitas</span>
-
-                            <strong>
-                                {formatCurrency(overallSummary.totalRevenue)}
-                            </strong>
-                        </div>
-
-                        <div>
-                            <span>Despesas</span>
-
-                            <strong>
-                                {formatCurrency(overallSummary.totalExpenses)}
-                            </strong>
-                        </div>
-
-                        <div>
-                            <span>Saldo líquido</span>
-
-                            <strong>
-                                {formatCurrency(overallSummary.netBalance)}
-                            </strong>
-                        </div>
-                    </div>
-                </section>
+            {overallSummary && (<OverallSummaryCard summary={overallSummary} />
             )}
         </main>
     );
