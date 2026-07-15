@@ -1,0 +1,45 @@
+.transactionList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.transactionCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #ffffff;
+}
+
+.transactionCard h3 {
+  margin: 0 0 4px;
+  font-size: 16px;
+}
+
+.transactionCard span {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.transactionCard strong {
+  font-size: 16px;
+}
+
+.revenue {
+  color: #15803d;
+}
+
+.expense {
+  color: #dc2626;
+}
+
+.emptyMessage {
+  padding: 24px;
+  color: #6b7280;
+  text-align: center;
+  border: 1px dashed #d1d5db;
+  border-radius: 8px;
+}
