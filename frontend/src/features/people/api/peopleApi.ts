@@ -33,3 +33,16 @@ export async function createPerson(person: CreatePersonRequest): Promise<void> {
     errorMessage: "Não foi possível cadastrar a pessoa.",
   });
 }
+
+export async function deletePerson(personId: number): Promise<void> {
+  await apiRequest<void>(`${peopleEndpoint}/${personId}`, {
+    method: "DELETE",
+    errorMessage: "Não foi possível excluir a pessoa.",
+  });
+}
+
+export function getPerson(personId: number): Promise<Person> {
+  return apiRequest<Person>(`${peopleEndpoint}/${personId}`, {
+    errorMessage: "Não foi possível buscar a pessoa.",
+  });
+}

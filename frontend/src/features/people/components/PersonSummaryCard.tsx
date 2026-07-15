@@ -1,4 +1,5 @@
 import { formatCurrency } from "../../../shared/utils/formatCurrency";
+import { Link } from "react-router";
 
 import type { PersonSummary } from "../types/person";
 
@@ -24,42 +25,48 @@ export function PersonSummaryCard({
   person,
 }: PersonSummaryCardProps) {
   return (
-    <article className={styles.card}>
-      <header className={styles.cardHeader}>
-        <h3 className={styles.personName}>
-          {person.personName}
-        </h3>
+    <Link
+      to={`/people/${person.personId}`}
+      className={styles.cardLink}
+      aria-label={`Visualizar detalhes de ${person.personName}`}
+    >
+      <article className={styles.card}>
+        <header className={styles.cardHeader}>
+          <h3 className={styles.personName}>
+            {person.personName}
+          </h3>
 
-        <div className={styles.balanceSummary}>
-          <span className={styles.balanceLabel}>
-            Saldo
-          </span>
+          <div className={styles.balanceSummary}>
+            <span className={styles.balanceLabel}>
+              Saldo
+            </span>
 
-          <strong
-            className={getBalanceClassName(person.balance)}
-          >
-            {formatCurrency(person.balance)}
-          </strong>
-        </div>
-      </header>
+            <strong
+              className={getBalanceClassName(person.balance)}
+            >
+              {formatCurrency(person.balance)}
+            </strong>
+          </div>
+        </header>
 
-      <dl className={styles.financialSummary}>
-        <div>
-          <dt>Receitas</dt>
+        <dl className={styles.financialSummary}>
+          <div>
+            <dt>Receitas</dt>
 
-          <dd className={styles.positiveValue}>
-            {formatCurrency(person.totalRevenue)}
-          </dd>
-        </div>
+            <dd className={styles.positiveValue}>
+              {formatCurrency(person.totalRevenue)}
+            </dd>
+          </div>
 
-        <div>
-          <dt>Despesas</dt>
+          <div>
+            <dt>Despesas</dt>
 
-          <dd className={styles.negativeValue}>
-            {formatCurrency(person.totalExpenses)}
-          </dd>
-        </div>
-      </dl>
-    </article>
+            <dd className={styles.negativeValue}>
+              {formatCurrency(person.totalExpenses)}
+            </dd>
+          </div>
+        </dl>
+      </article>
+    </Link>
   );
 }
