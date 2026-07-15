@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ControlSpending.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260714154806_AddTransactions")]
-    partial class AddTransactions
+    [Migration("20260715020552_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,9 +59,6 @@ namespace ControlSpending.Migrations
                     b.Property<int>("PersonId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PersonId1")
-                        .HasColumnType("int");
-
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
@@ -73,22 +70,16 @@ namespace ControlSpending.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.HasIndex("PersonId1");
-
                     b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("ControlSpending.Models.Transaction", b =>
                 {
                     b.HasOne("ControlSpending.Models.Person", "Person")
-                        .WithMany()
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ControlSpending.Models.Person", null)
                         .WithMany("Transactions")
-                        .HasForeignKey("PersonId1");
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Person");
                 });

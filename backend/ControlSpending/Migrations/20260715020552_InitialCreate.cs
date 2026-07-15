@@ -6,29 +6,29 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ControlSpending.Migrations
 {
     /// <inheritdoc />
-    public partial class AddTransactions : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.UpdateData(
-                table: "People",
-                keyColumn: "Name",
-                keyValue: null,
-                column: "Name",
-                value: "");
+            migrationBuilder.AlterDatabase()
+                .Annotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "Name",
-                table: "People",
-                type: "varchar(50)",
-                maxLength: 50,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "longtext",
-                oldNullable: true)
-                .Annotation("MySql:CharSet", "utf8mb4")
-                .OldAnnotation("MySql:CharSet", "utf8mb4");
+            migrationBuilder.CreateTable(
+                name: "People",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Age = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_People", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "Transactions",
@@ -40,8 +40,7 @@ namespace ControlSpending.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Value = table.Column<decimal>(type: "decimal(13,2)", precision: 13, scale: 2, nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
-                    PersonId = table.Column<int>(type: "int", nullable: false),
-                    PersonId1 = table.Column<int>(type: "int", nullable: true)
+                    PersonId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -51,12 +50,7 @@ namespace ControlSpending.Migrations
                         column: x => x.PersonId,
                         principalTable: "People",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Transactions_People_PersonId1",
-                        column: x => x.PersonId1,
-                        principalTable: "People",
-                        principalColumn: "Id");
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -64,11 +58,6 @@ namespace ControlSpending.Migrations
                 name: "IX_Transactions_PersonId",
                 table: "Transactions",
                 column: "PersonId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Transactions_PersonId1",
-                table: "Transactions",
-                column: "PersonId1");
         }
 
         /// <inheritdoc />
@@ -77,16 +66,8 @@ namespace ControlSpending.Migrations
             migrationBuilder.DropTable(
                 name: "Transactions");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "Name",
-                table: "People",
-                type: "longtext",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "varchar(50)",
-                oldMaxLength: 50)
-                .Annotation("MySql:CharSet", "utf8mb4")
-                .OldAnnotation("MySql:CharSet", "utf8mb4");
+            migrationBuilder.DropTable(
+                name: "People");
         }
     }
 }

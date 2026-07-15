@@ -2,6 +2,7 @@ using ControlSpending.Database;
 using Microsoft.AspNetCore.Mvc;
 using ControlSpending.Models;
 using Microsoft.EntityFrameworkCore;
+using ControlSpending.DTOs.People;
 
 namespace ControlSpending.Controllers
 {
@@ -23,16 +24,29 @@ namespace ControlSpending.Controllers
         // Since this operation can take some time to complete, using async/await
         // avoids runtime problems and prevents the application from freezing.
         [HttpPost]
-        public async Task<IActionResult> AddPerson(Person person)
+        public async Task<IActionResult> AddPerson(CreatePersonRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
+            var person = new Person
+            {
+                Name = request.Name,
+                Age = request.Age
+            };
             _appDbContext.People.Add(person);
             await _appDbContext.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetPerson), new { id = person.Id },person);
+            var response = new PersonResponse
+            {
+                Id = person.Id,
+                Name = person.Name,
+                Age = person.Age
+            };
+
+            return CreatedAtAction(nameof(GetPerson), new { id = person.Id }, response);
         }
 
 
@@ -52,7 +66,7 @@ namespace ControlSpending.Controllers
         }
 
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<Person>> GetPerson(int id)
         {
             var person = await _appDbContext.People.FindAsync(id);
