@@ -1,0 +1,77 @@
+.card {
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background-color: #ffffff;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.personName {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  color: #1f2937;
+  font-size: 1rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.balanceSummary {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.balanceLabel {
+  color: #6b7280;
+  font-size: 0.75rem;
+}
+
+.balanceSummary strong {
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.financialSummary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 20px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.financialSummary div {
+  display: grid;
+  gap: 6px;
+}
+
+.financialSummary dt {
+  color: #6b7280;
+  font-size: 0.75rem;
+}
+
+.financialSummary dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.positiveValue {
+  color: #047857;
+}
+
+.negativeValue {
+  color: #dc2626;
+}
+
+.neutralValue {
+  color: #6b7280;
+}

@@ -1,10 +1,12 @@
-import type { Person, PersonSummary } from "../types/person";
+import type { Person, PersonSummary, OverallSummary, } from "../types/person";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const peopleEndpoint = "/api/Person";
 
 const peopleSummaryEndpoint = "/api/Summary/people";
+
+const overallSummaryEndpoint = "/api/Summary/overall";
 
 export async function getPeople(): Promise<Person[]> {
   if (!apiUrl) {
@@ -37,4 +39,27 @@ export async function getPeopleSummary(): Promise<PersonSummary[]> {
   const peopleSummary: PersonSummary[] = await response.json();
 
   return peopleSummary;
+}
+
+
+export async function getOverallSummary(): Promise<OverallSummary> {
+  if (!apiUrl) {
+    throw new Error(
+      "A variável VITE_API_URL não foi configurada."
+    );
+  }
+
+  const response = await fetch(
+    `${apiUrl}${overallSummaryEndpoint}`
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Não foi possível buscar o resumo geral. Status: ${response.status}.`
+    );
+  }
+
+  const overallSummary: OverallSummary = await response.json();
+
+  return overallSummary;
 }

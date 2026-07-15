@@ -52,24 +52,6 @@
   list-style: none;
 }
 
-.personItem {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 16px 0;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.personName {
-  color: #374151;
-}
-
-.personAge {
-  color: #6b7280;
-  font-size: 0.875rem;
-}
-
 .statusMessage {
   color: #6b7280;
 }
@@ -78,10 +60,44 @@
   color: #b91c1c;
 }
 
-.financialData {
+.peopleList {
   display: grid;
   gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.overallSummary {
+  margin-bottom: 32px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background-color: #ffffff;
+}
+
+.overallSummary h2 {
+  margin: 0 0 20px;
+  color: #1f2937;
+  font-size: 1.1rem;
+}
+
+.overallValues {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.overallValues div {
+  display: grid;
+  gap: 6px;
+}
+
+.overallValues span {
   color: #6b7280;
-  font-size: 0.875rem;
-  text-align: right;
+  font-size: 0.75rem;
+}
+
+.overallValues strong {
+  color: #374151;
 }

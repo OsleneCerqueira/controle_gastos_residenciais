@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 
-import { getPeople, getPeopleSummary } from "../api/peopleApi";
+import { formatCurrency } from "../../../shared/utils/formatCurrency";
 
-import type { Person, PersonSummary } from "../types/person";
+import { getOverallSummary, getPeopleSummary } from "../api/peopleApi";
+import { PersonSummaryCard } from "../components/PersonSummaryCard";
+
+import type { OverallSummary, PersonSummary } from "../types/person";
 
 import styles from "./PeoplePage.module.css";
 
 export function PeoplePage() {
     const [peopleSummary, setPeopleSummary] = useState<PersonSummary[]>([]);
+    const [overallSummary, setOverallSummary] = useState<OverallSummary | null>(null);
 
     const [isLoading, setIsLoading] = useState(true);
 
@@ -16,9 +20,14 @@ export function PeoplePage() {
     useEffect(() => {
         async function loadPeopleSummary(): Promise<void> {
             try {
-                const summaryData = await getPeopleSummary();
+                const [peopleSummaryData, overallSummaryData] = await Promise.all([
+                    getPeopleSummary(),
+                    getOverallSummary(),
+                ]);
 
-                setPeopleSummary(summaryData);
+                setPeopleSummary(peopleSummaryData);
+                setOverallSummary(overallSummaryData);
+
             } catch (error) {
                 const message = error instanceof Error ? error.message : "Ocorreu um erro ao buscar as pessoas.";
 
@@ -67,23 +76,44 @@ export function PeoplePage() {
                 {!isLoading && !errorMessage && peopleSummary.length > 0 && (
                     <ul className={styles.peopleList}>
                         {peopleSummary.map((person) => (
-                            <li key={person.personId} className={styles.personItem}>
-                                <strong className={styles.personName}>
-                                    {person.personName}
-                                </strong>
-
-                                <div className={styles.financialData}>
-                                    <span>Receitas: {person.totalRevenue}</span>
-
-                                    <span> Despesas: {person.totalExpenses}</span>
-
-                                    <span>Saldo: {person.balance}</span>
-                                </div>
+                            <li key={person.personId}>
+                                <PersonSummaryCard person={person} />
                             </li>
                         ))}
                     </ul>
                 )}
             </section>
+            {overallSummary && (
+                <section className={styles.overallSummary}>
+                    <h2>Resumo geral</h2>
+
+                    <div className={styles.overallValues}>
+                        <div>
+                            <span>Receitas</span>
+
+                            <strong>
+                                {formatCurrency(overallSummary.totalRevenue)}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Despesas</span>
+
+                            <strong>
+                                {formatCurrency(overallSummary.totalExpenses)}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Saldo líquido</span>
+
+                            <strong>
+                                {formatCurrency(overallSummary.netBalance)}
+                            </strong>
+                        </div>
+                    </div>
+                </section>
+            )}
         </main>
     );
 }

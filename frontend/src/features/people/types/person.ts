@@ -11,3 +11,9 @@ export interface PersonSummary {
   totalExpenses: number;
   balance: number;
 }
+
+export interface OverallSummary {
+  totalRevenue: number;
+  totalExpenses: number;
+  netBalance: number;
+}
