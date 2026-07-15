@@ -1,85 +1,58 @@
-using ControlSpending.Database;
 using ControlSpending.DTOs.Transactions;
-using ControlSpending.Enums;
-using ControlSpending.Models;
+using ControlSpending.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
-namespace ControlSpending.Controllers
+namespace ControlSpending.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class TransactionController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class TransactionController : ControllerBase
+    private readonly ITransactionService _transactionService;
+
+    public TransactionController(ITransactionService transactionService)
     {
-        private readonly AppDbContext _appDbContext;
+        _transactionService = transactionService;
+    }
 
-        public TransactionController(AppDbContext appDbContext)
+    [HttpPost]
+    public async Task<ActionResult<TransactionResponse>> AddTransaction(CreateTransactionRequest request)
+    {
+        try
         {
-            _appDbContext = appDbContext;
+            TransactionResponse response = await _transactionService.AddTransaction(request);
+
+            return StatusCode(StatusCodes.Status201Created, response);
         }
-
-
-        [HttpPost]
-        public async Task<ActionResult<TransactionResponse>> AddTransaction(CreateTransactionRequest request)
+        catch (KeyNotFoundException exception)
         {
-            // Searches for the person informed in the request.
-            var person = await _appDbContext.People.AsNoTracking().FirstOrDefaultAsync(person => person.Id == request.PersonId);
-
-            // Prevents transactions from being associated with a person who is not registered.
-            if (person is null){
-                return BadRequest("A pessoa informada não está cadastrada.");
-            }
-
-            // Business rule: Individuals under 18 years of age can only register expenses.
-            if (person.Age < 18 && request.Type == TransactionType.Revenue){
-                return BadRequest("Pessoas menores de 18 anos podem cadastrar apenas despesas.");
-            }
-
-            var transaction = new Transaction{
-                Description = request.Description,
-                Value = request.Value,
-                Type = request.Type,
-                PersonId = request.PersonId
-            };
-
-            _appDbContext.Transactions.Add(transaction);
-
-            await _appDbContext.SaveChangesAsync();
-
-            var response = new TransactionResponse{
-                Id = transaction.Id,
-                Description = transaction.Description,
-                Value = transaction.Value,
-                Type = transaction.Type,
-                PersonId = person.Id,
-                PersonName = person.Name
-            };
-
-            return CreatedAtAction(nameof(GetTransactions), response);
+            return BadRequest(new { message = exception.Message });
         }
-
-        /// <summary>
-        // Return all transactions recorded in the database.
-        // </summary>
-        // <returns>
-        // A list containing all transactions.
-        // </returns>
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<TransactionResponse>>> GetTransactions()
+        catch (InvalidOperationException exception)
         {
+            return BadRequest(new { message = exception.Message });
+        }
+    }
 
-            var transactions = await _appDbContext.Transactions.AsNoTracking().Select(transaction => new TransactionResponse
-                    {
-                        Id = transaction.Id,
-                        Description = transaction.Description,
-                        Value = transaction.Value,
-                        Type = transaction.Type,
-                        PersonId = transaction.PersonId,
-                        PersonName = transaction.Person.Name
-                    }).ToListAsync();
+
+
+    /// <summary>
+    /// Returns all transactions registered for a specific person.
+    /// </summary>
+    /// <param name="personId">The identifier of the person.</param>
+    /// <returns>A list containing the person's transactions.</returns>
+    [HttpGet("person/{personId:int}")]
+    public async Task<ActionResult<List<TransactionResponse>>> GetTransactionsByPersonId(int personId)
+    {
+        try
+        {
+            List<TransactionResponse> transactions = await _transactionService.GetTransactionsByPersonId(personId);
 
             return Ok(transactions);
         }
-
+        catch (KeyNotFoundException exception)
+        {
+            return NotFound(new { message = exception.Message });
+        }
     }
 }

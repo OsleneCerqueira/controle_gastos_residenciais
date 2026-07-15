@@ -21,7 +21,7 @@ var connectionString = builder.Configuration.GetConnectionString("AppDbConnectio
 builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 builder.Services.AddScoped<ISummaryService, SummaryService>();// Registers the report service for dependency injection.
-
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendCorsPolicy", policy =>
