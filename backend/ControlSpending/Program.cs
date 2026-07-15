@@ -22,12 +22,22 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(connecti
 
 builder.Services.AddScoped<ISummaryService, SummaryService>();// Registers the report service for dependency injection.
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontendCorsPolicy", policy =>
+        {
+            policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod();
+        }
+    );
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-     app.MapOpenApi();
+    app.MapOpenApi();
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint(
@@ -38,6 +48,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("FrontendCorsPolicy");
 
 app.UseAuthorization();
 
