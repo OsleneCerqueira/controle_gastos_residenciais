@@ -41,6 +41,6 @@ public class AppDbContext : DbContext
 
         // Defines the relationship where each transaction belongs to one person and uses PersonId as the foreign key.
         modelBuilder.Entity<Transaction>().HasOne(transaction => transaction.Person)
-            .WithMany().HasForeignKey(transaction => transaction.PersonId).OnDelete(DeleteBehavior.Restrict);
+            .WithMany().HasForeignKey(transaction => transaction.PersonId).OnDelete(DeleteBehavior.Cascade);
     }
 }
