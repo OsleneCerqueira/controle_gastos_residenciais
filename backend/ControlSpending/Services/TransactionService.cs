@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ControlSpending.Services;
 
+/// <summary>
+/// Applies transaction business rules and coordinates transaction persistence.
+/// </summary>
 public class TransactionService : ITransactionService
 {
     private const int PageSize = 10;
@@ -19,15 +22,20 @@ public class TransactionService : ITransactionService
         _appDbContext = appDbContext;
     }
 
+    /// <inheritdoc />
     public async Task<TransactionResponse> AddTransaction(CreateTransactionRequest request)
     {
-        var person = await _appDbContext.People.AsNoTracking().FirstOrDefaultAsync(person => person.Id == request.PersonId);
+        var person = await _appDbContext.People
+            .AsNoTracking()
+            .FirstOrDefaultAsync(person => person.Id == request.PersonId);
 
-        if (person is null){
-            throw new KeyNotFoundException("A pessoa informada não está cadastrada." );
+        if (person is null)
+        {
+            throw new KeyNotFoundException("A pessoa informada não está cadastrada.");
         }
 
-        if (person.Age < 18 && request.Type == TransactionType.Revenue){
+        if (person.Age < 18 && request.Type == TransactionType.Revenue)
+        {
             throw new InvalidOperationException("Pessoas menores de 18 anos podem cadastrar apenas despesas.");
         }
 
@@ -56,12 +64,15 @@ public class TransactionService : ITransactionService
         };
     }
 
-
+    /// <inheritdoc />
     public async Task<PagedResponse<TransactionResponse>> GetTransactionsByPersonId(int personId, int page)
     {
-        bool personExists = await _appDbContext.People.AsNoTracking().AnyAsync(person => person.Id == personId);
+        bool personExists = await _appDbContext.People
+            .AsNoTracking()
+            .AnyAsync(person => person.Id == personId);
 
-        if (!personExists){
+        if (!personExists)
+        {
             throw new KeyNotFoundException("Pessoa não encontrada.");
         }
 
@@ -71,7 +82,10 @@ public class TransactionService : ITransactionService
             .ThenByDescending(transaction => transaction.Id);
 
         int totalItems = await query.CountAsync();
-        List<TransactionResponse> items = await query.Skip((page - 1) * PageSize).Take(PageSize).ToListAsync();
+        List<TransactionResponse> items = await query
+            .Skip((page - 1) * PageSize)
+            .Take(PageSize)
+            .ToListAsync();
 
         return new PagedResponse<TransactionResponse>
         {
@@ -84,7 +98,9 @@ public class TransactionService : ITransactionService
 
     private IQueryable<TransactionResponse> GetTransactionResponses()
     {
-        return _appDbContext.Transactions.AsNoTracking().Select(transaction => new TransactionResponse
+        return _appDbContext.Transactions
+            .AsNoTracking()
+            .Select(transaction => new TransactionResponse
             {
                 Id = transaction.Id,
                 Description = transaction.Description,

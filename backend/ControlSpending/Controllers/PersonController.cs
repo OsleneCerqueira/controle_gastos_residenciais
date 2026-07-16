@@ -6,6 +6,9 @@ using ControlSpending.DTOs.People;
 
 namespace ControlSpending.Controllers
 {
+    /// <summary>
+    /// Provides endpoints for creating, listing, retrieving, and deleting people.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class PersonController : ControllerBase
@@ -16,13 +19,11 @@ namespace ControlSpending.Controllers
         {
             _appDbContext = appDbContext;
         }
-
-
-        // The methods are implemented asynchronously because the system
-        // needs to wait for the data to be retrieved from the database.
-
-        // Since this operation can take some time to complete, using async/await
-        // avoids runtime problems and prevents the application from freezing.
+        /// <summary>
+        /// Creates a person and returns the generated identifier.
+        /// </summary>
+        /// <param name="request">The person's name and age.</param>
+        /// <returns>The created person.</returns>
         [HttpPost]
         public async Task<IActionResult> AddPerson(CreatePersonRequest request)
         {
@@ -48,15 +49,10 @@ namespace ControlSpending.Controllers
 
             return CreatedAtAction(nameof(GetPerson), new { id = person.Id }, response);
         }
-
-
-
         /// <summary>
-        // Searches for all people registered in the database.
-        // </summary>
-        // <returns>
-        // A list of all registered people.
-        // </returns>
+        /// Returns all registered people without exposing persistence entities.
+        /// </summary>
+        /// <returns>A list of registered people.</returns>
         [HttpGet]
         public async Task<ActionResult<List<PersonResponse>>> GetPeople()
         {
@@ -72,18 +68,24 @@ namespace ControlSpending.Controllers
 
             return Ok(people);
         }
-
-        
+        /// <summary>
+        /// Returns a person by identifier.
+        /// </summary>
+        /// <param name="id">The person's identifier.</param>
+        /// <returns>The person, or 404 when no matching record exists.</returns>
         [HttpGet("{id:int}")]
         public async Task<ActionResult<PersonResponse>> GetPerson(int id)
         {
-            var person = await _appDbContext.People.AsNoTracking()
-                .Where(person => person.Id == id).Select(person => new PersonResponse
+            var person = await _appDbContext.People
+                .AsNoTracking()
+                .Where(person => person.Id == id)
+                .Select(person => new PersonResponse
                 {
                     Id = person.Id,
                     Name = person.Name,
                     Age = person.Age
-                }).FirstOrDefaultAsync();
+                })
+                .FirstOrDefaultAsync();
 
             if (person == null)
             {
@@ -93,6 +95,12 @@ namespace ControlSpending.Controllers
             return Ok(person);
         }
 
+        /// <summary>
+        /// Deletes a person. Related transactions are deleted by the configured
+        /// cascade relationship.
+        /// </summary>
+        /// <param name="id">The person's identifier.</param>
+        /// <returns>A success response, or 404 when no matching record exists.</returns>
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeletePerson(int id)
         {
@@ -107,7 +115,5 @@ namespace ControlSpending.Controllers
 
             return Ok($"Pessoa:{person.Name} deletada com sucesso");
         }
-
-
     }
 }

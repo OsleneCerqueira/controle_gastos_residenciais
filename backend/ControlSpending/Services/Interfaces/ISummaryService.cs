@@ -7,9 +7,14 @@ namespace ControlSpending.Services.Interfaces;
 /// </summary>
 public interface ISummaryService
 {
-    Task<IEnumerable<PersonFinancialSummaryResponse>>
-        GetSummaryByPersonAsync();
+    /// <summary>
+    /// Calculates revenue, expenses, and balance for every registered person.
+    /// People without transactions are included with zero totals.
+    /// </summary>
+    Task<IEnumerable<PersonFinancialSummaryResponse>> GetSummaryByPersonAsync();
 
-    Task<OverallFinancialSummaryResponse>
-        GetOverallSummaryAsync();
+    /// <summary>
+    /// Calculates consolidated revenue, expenses, and net balance.
+    /// </summary>
+    Task<OverallFinancialSummaryResponse> GetOverallSummaryAsync();
 }

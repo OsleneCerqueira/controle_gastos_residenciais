@@ -2,19 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using ControlSpending.Models;
 namespace ControlSpending.Database;
 
-
 /// <summary>
-/// Creates the context responsible for communication with the database. 
-/// Receives the connection settings and sends them to the DbContext
-/// via base(options).
+/// Represents the application's database session and configures entity relationships.
 /// </summary>
-/// <param name="options">
-/// Settings used to access the database. 
-/// /// </param>
 public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
     /// <summary>
     /// Represents the people stored in the database.
     /// </summary>
@@ -36,14 +29,17 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Defines a monetary column with up to 18 digits and 2 decimal places.
+        // Keeps monetary values within the precision supported by the database schema.
         modelBuilder.Entity<Transaction>().Property(transaction => transaction.Value).HasPrecision(13, 2);
 
         modelBuilder.Entity<Transaction>()
             .HasIndex(transaction => new { transaction.PersonId, transaction.CreatedAt, transaction.Id });
 
-        // Defines the relationship where each transaction belongs to one person and uses PersonId as the foreign key.
-        modelBuilder.Entity<Transaction>().HasOne(transaction => transaction.Person)
-            .WithMany(person => person.Transactions).HasForeignKey(transaction => transaction.PersonId).OnDelete(DeleteBehavior.Cascade);
+        // Cascade deletion enforces the rule that a person's transactions are removed with them.
+        modelBuilder.Entity<Transaction>()
+            .HasOne(transaction => transaction.Person)
+            .WithMany(person => person.Transactions)
+            .HasForeignKey(transaction => transaction.PersonId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

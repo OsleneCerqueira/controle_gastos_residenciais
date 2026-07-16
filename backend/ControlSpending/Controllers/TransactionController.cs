@@ -6,6 +6,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ControlSpending.Controllers;
 
+/// <summary>
+/// Provides endpoints for creating and listing financial transactions.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class TransactionController : ControllerBase
@@ -17,6 +20,11 @@ public class TransactionController : ControllerBase
         _transactionService = transactionService;
     }
 
+    /// <summary>
+    /// Creates a transaction after validating the person and age restriction.
+    /// </summary>
+    /// <param name="request">The transaction data.</param>
+    /// <returns>The created transaction.</returns>
     [HttpPost]
     public async Task<ActionResult<TransactionResponse>> AddTransaction(CreateTransactionRequest request)
     {
@@ -36,13 +44,12 @@ public class TransactionController : ControllerBase
         }
     }
 
-
-
     /// <summary>
-    /// Returns all transactions registered for a specific person.
+    /// Returns a page of transactions for a person, ordered from newest to oldest.
     /// </summary>
     /// <param name="personId">The identifier of the person.</param>
-    /// <returns>A list containing the person's transactions.</returns>
+    /// <param name="page">The page number, starting at one.</param>
+    /// <returns>A page containing up to ten transactions.</returns>
     [HttpGet("person/{personId:int}")]
     public async Task<ActionResult<PagedResponse<TransactionResponse>>> GetTransactionsByPersonId(
         int personId,
@@ -50,7 +57,8 @@ public class TransactionController : ControllerBase
     {
         try
         {
-            PagedResponse<TransactionResponse> transactions = await _transactionService.GetTransactionsByPersonId(personId, page);
+            PagedResponse<TransactionResponse> transactions =
+                await _transactionService.GetTransactionsByPersonId(personId, page);
 
             return Ok(transactions);
         }

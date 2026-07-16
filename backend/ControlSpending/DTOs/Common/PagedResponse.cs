@@ -1,5 +1,9 @@
 namespace ControlSpending.DTOs.Common;
 
+/// <summary>
+/// Represents a page of items and the metadata required for navigation.
+/// </summary>
+/// <typeparam name="T">The type of item returned by the query.</typeparam>
 public class PagedResponse<T>
 {
     public required IReadOnlyList<T> Items { get; set; }

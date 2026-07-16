@@ -13,11 +13,11 @@ public class Transaction
 
     public decimal Value { get; set; }
 
-    /// <summary>
-    /// This property uses an enum because its possible values are fixed and predefined.
-    /// </summary>
     public TransactionType Type { get; set; }
-
+    
+    /// <summary>
+    /// Gets the UTC date and time when the transaction was registered.
+    /// </summary>
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     /// <summary>
