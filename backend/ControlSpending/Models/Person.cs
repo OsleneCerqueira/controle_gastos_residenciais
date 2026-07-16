@@ -21,7 +21,7 @@ public class Person
 
     [Required(ErrorMessage = "Nome é obrigatório")]
     [MaxLength(50, ErrorMessage = "Nome precisa ter no máximo 50 caracteres")]
-    public string? Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     [Range(1, 120, ErrorMessage = "A idade deve estar entre 1 e 120 anos.")]
     public int Age { get; set; }

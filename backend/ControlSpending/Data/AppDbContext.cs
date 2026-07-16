@@ -39,6 +39,9 @@ public class AppDbContext : DbContext
         // Defines a monetary column with up to 18 digits and 2 decimal places.
         modelBuilder.Entity<Transaction>().Property(transaction => transaction.Value).HasPrecision(13, 2);
 
+        modelBuilder.Entity<Transaction>()
+            .HasIndex(transaction => new { transaction.PersonId, transaction.CreatedAt, transaction.Id });
+
         // Defines the relationship where each transaction belongs to one person and uses PersonId as the foreign key.
         modelBuilder.Entity<Transaction>().HasOne(transaction => transaction.Person)
             .WithMany(person => person.Transactions).HasForeignKey(transaction => transaction.PersonId).OnDelete(DeleteBehavior.Cascade);

@@ -15,6 +15,8 @@ public class TransactionResponse
 
     public TransactionType Type { get; set; }
 
+    public DateTime CreatedAt { get; set; }
+
     public int PersonId { get; set; }
 
     public string? PersonName { get; set; }

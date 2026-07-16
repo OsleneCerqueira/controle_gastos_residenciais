@@ -1,6 +1,8 @@
 using ControlSpending.DTOs.Transactions;
+using ControlSpending.DTOs.Common;
 using ControlSpending.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace ControlSpending.Controllers;
 
@@ -42,11 +44,13 @@ public class TransactionController : ControllerBase
     /// <param name="personId">The identifier of the person.</param>
     /// <returns>A list containing the person's transactions.</returns>
     [HttpGet("person/{personId:int}")]
-    public async Task<ActionResult<List<TransactionResponse>>> GetTransactionsByPersonId(int personId)
+    public async Task<ActionResult<PagedResponse<TransactionResponse>>> GetTransactionsByPersonId(
+        int personId,
+        [FromQuery, Range(1, int.MaxValue)] int page = 1)
     {
         try
         {
-            List<TransactionResponse> transactions = await _transactionService.GetTransactionsByPersonId(personId);
+            PagedResponse<TransactionResponse> transactions = await _transactionService.GetTransactionsByPersonId(personId, page);
 
             return Ok(transactions);
         }

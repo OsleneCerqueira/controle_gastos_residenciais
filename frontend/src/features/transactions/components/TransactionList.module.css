@@ -20,8 +20,16 @@
 }
 
 .transactionCard span {
+  display: block;
   color: #6b7280;
   font-size: 14px;
+}
+
+.transactionCard time {
+  display: block;
+  margin-top: 4px;
+  color: #9ca3af;
+  font-size: 12px;
 }
 
 .transactionCard strong {
@@ -42,4 +50,33 @@
   text-align: center;
   border: 1px dashed #d1d5db;
   border-radius: 8px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.pagination button {
+  min-height: 40px;
+  padding: 0 14px;
+  color: #ffffff;
+  border: 0;
+  border-radius: 8px;
+  background-color: #111827;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.pagination span {
+  color: #6b7280;
+  font-size: 14px;
+  text-align: center;
 }

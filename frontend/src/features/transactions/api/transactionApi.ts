@@ -1,10 +1,13 @@
 import { apiRequest } from "../../../shared/api/httpClient";
-import type { Transaction, CreateTransactionRequest } from "../types/transaction";
+import type { TransactionPage, CreateTransactionRequest } from "../types/transaction";
 
 const transactionEndpoint = "/api/Transaction";
 
-export function getTransactionsByPersonId(personId: number): Promise<Transaction[]> {
-  return apiRequest<Transaction[]>(`${transactionEndpoint}/person/${personId}`, {
+export function getTransactionsByPersonId(
+  personId: number,
+  page = 1,
+): Promise<TransactionPage> {
+  return apiRequest<TransactionPage>(`${transactionEndpoint}/person/${personId}?page=${page}`, {
     errorMessage: "Não foi possível buscar as transações da pessoa.",
   });
 }

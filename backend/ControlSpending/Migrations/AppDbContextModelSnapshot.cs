@@ -50,6 +50,9 @@ namespace ControlSpending.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
@@ -65,7 +68,7 @@ namespace ControlSpending.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PersonId");
+                    b.HasIndex("PersonId", "CreatedAt", "Id");
 
                     b.ToTable("Transactions");
                 });

@@ -18,6 +18,8 @@ public class Transaction
     /// </summary>
     public TransactionType Type { get; set; }
 
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
     /// <summary>
     /// Gets or sets the identifier of the related person.
     /// </summary>
