@@ -72,7 +72,7 @@ Entre na pasta do backend:
 cd backend/ControlSpending
 ```
 
-No arquivo `appsettings.json` edite as credencias para acesso ao banco de dados e inclua o seu user e o password senha
+No arquivo `appsettings.json` edite as credencias para acesso ao banco de dados e inclua o seu user e a sua senha
 
 
 
