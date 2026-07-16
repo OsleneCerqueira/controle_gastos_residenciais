@@ -53,27 +53,16 @@ O backend separa endpoints, regras de negócio, contratos e persistência. O fro
 - Ferramenta `dotnet-ef` compatível com o Entity Framework Core 9
 
 
-## Configuração do backend
+## Como executar o projeto
+1. Clonar o repositório
 
-Crie o arquivo `backend/ControlSpending/.env`:
+Abra o terminal e execute:
 
-```env
-ConnectionStrings__AppDbConnectionString=Server=localhost;Port=3306;Database=control_spending;User=seu_usuario;Password=sua_senha;
-```
+git clone `https://github.com/OsleneCerqueira/controle_gastos_residenciais.git`
 
-O CORS permite por padrão o frontend em:
+Entre na pasta clonada:
 
-```text
-http://localhost:5173
-```
-
-Para configurar as origens em outro ambiente, use variáveis de ambiente:
-
-```env
-Cors__AllowedOrigins__0=https://app.exemplo.com
-Cors__AllowedOrigins__1=https://admin.exemplo.com
-```
-
+cd controle_gastos_residenciais
 
 ## Criação e atualização do banco
 
@@ -82,6 +71,10 @@ Entre na pasta do backend:
 ```powershell
 cd backend/ControlSpending
 ```
+
+No arquivo `appsettings.json` edite as credencias para acesso ao banco de dados e inclua o seu user e o password senha
+
+
 
 Restaure as dependências e aplique as migrations:
 
@@ -107,13 +100,7 @@ Endereços configurados para desenvolvimento:
 
 ## Configuração e execução do frontend
 
-Crie o arquivo `frontend/.env`:
-
-```env
-VITE_API_URL=https://localhost:7043
-```
-
-Depois, instale as dependências e inicie a aplicação:
+ Instale as dependências e inicie a aplicação:
 
 ```powershell
 cd frontend
@@ -195,4 +182,14 @@ npm run build
 - Consultas somente de leitura utilizam `AsNoTracking()` que é uma funcionalidade do Entity Framework que permite que você consulte dados de um banco de dados sem rastrear as entidades resultantes.
 - A regra para menores de idade é verificada no frontend para retorno imediato e no backend para garantir a integridade dos dados.
 
-
+## Próximas implementações
+- Substituir idade por data de nascimento e calcular a idade automaticamente.
+- Implementar cadastro, login e logout.
+- Adicionar autenticação e autorização.
+- Permitir edição de pessoas.
+- Permitir edição e exclusão de transações.
+- Adicionar a data efetiva da transação.
+- Implementar pesquisa e filtros de transações.
+- Criar controle de orçamento mensal.
+- Implementar tratamento global e padronizado de erros.
+- Melhorar a validação e segurança das configurações da aplicação.

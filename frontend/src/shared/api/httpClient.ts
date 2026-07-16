@@ -1,4 +1,4 @@
-const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = "https://localhost:7043";
 
 if (!apiUrl) {
   throw new Error("A variável VITE_API_URL não foi configurada.");
