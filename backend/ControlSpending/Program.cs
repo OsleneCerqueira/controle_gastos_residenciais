@@ -8,6 +8,7 @@ using ControlSpending.Services.Interfaces;
 
 Env.Load();
 var builder = WebApplication.CreateBuilder(args);
+const string frontendCorsPolicy = "FrontendCorsPolicy";
 
 
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -22,11 +23,21 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(connecti
 
 builder.Services.AddScoped<ISummaryService, SummaryService>();// Registers the report service for dependency injection.
 builder.Services.AddScoped<ITransactionService, TransactionService>();
+
+var allowedOrigins = builder.Configuration
+    .GetSection("Cors:AllowedOrigins")
+    .Get<string[]>() ?? [];
+
+if (allowedOrigins.Length == 0)
+{
+    throw new InvalidOperationException("Configure ao menos uma origem em Cors:AllowedOrigins.");
+}
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("FrontendCorsPolicy", policy =>
+    options.AddPolicy(frontendCorsPolicy, policy =>
         {
-            policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod();
+            policy.WithOrigins(allowedOrigins).AllowAnyHeader().AllowAnyMethod();
         }
     );
 });
@@ -49,7 +60,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("FrontendCorsPolicy");
+app.UseCors(frontendCorsPolicy);
 
 app.UseAuthorization();
 
