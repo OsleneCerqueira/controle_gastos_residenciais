@@ -27,6 +27,13 @@ const initialValues: PersonFormValues = {
     age: "",
 };
 
+function capitalizeName(name: string): string {
+    return name.trim().split(/\s+/).map((part) =>
+        part.charAt(0).toLocaleUpperCase("pt-BR") +
+        part.slice(1).toLocaleLowerCase("pt-BR")
+    ).join(" ");
+}
+
 export function PersonForm({
     isSubmitting,
     serverError,
@@ -75,7 +82,10 @@ export function PersonForm({
             return;
         }
 
-        await onSubmit({ name: values.name.trim(), age: Number(values.age) });
+        await onSubmit({
+            name: capitalizeName(values.name),
+            age: Number(values.age),
+        });
     }
 
     return (
@@ -84,7 +94,7 @@ export function PersonForm({
                 <label htmlFor="name">  Nome  </label>
 
                 <input id="name" name="name" type="text" value={values.name}
-                    placeholder="Ex.: Maria Silva" 
+                    placeholder="Ex.: Maria Silva"
                     onChange={handleChange}
                     aria-invalid={Boolean(errors.name)}
                 />
@@ -102,7 +112,7 @@ export function PersonForm({
                 <input id="age" name="age" type="number" min="0" step="1" value={values.age}
                     placeholder="Ex.: 25"
                     onChange={handleChange}
-                    aria-invalid={ Boolean(errors.age) }/>
+                    aria-invalid={Boolean(errors.age)} />
 
                 {errors.age && (
                     <span className={styles.errorMessage}>
@@ -118,7 +128,7 @@ export function PersonForm({
             )}
 
             <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
-                {isSubmitting? "Salvando..." : "Salvar pessoa"}
+                {isSubmitting ? "Salvando..." : "Salvar pessoa"}
             </button>
         </form>
     );
