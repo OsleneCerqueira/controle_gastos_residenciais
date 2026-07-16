@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router";
+import { Link, useParams, useNavigate } from "react-router";
 
-import { getPerson } from "../api/peopleApi";
+import { getPerson, deletePerson } from "../api/peopleApi";
 
 import type { Person } from "../types/person";
 
@@ -12,12 +12,14 @@ import { TransactionList } from "../../transactions/components/TransactionList";
 import type { Transaction } from "../../transactions/types/transaction";
 
 export function PersonDetailsPage() {
+  const navigate = useNavigate();
   const { personId } = useParams();
 
   const [person, setPerson] = useState<Person | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     async function loadPerson(): Promise<void> {
@@ -42,6 +44,37 @@ export function PersonDetailsPage() {
 
     loadPerson();
   }, [personId]);
+
+  async function handleDeletePerson() {
+    if (!person) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Deseja realmente excluir ${person.name} e todas as suas transações?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setIsDeleting(true);
+      setErrorMessage("");
+
+      await deletePerson(person.id);
+
+      navigate("/people");
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Não foi possível excluir a pessoa";
+
+      setErrorMessage(message);
+    } finally {
+      setIsDeleting(false);
+    }
+  }
+
 
   return (
     <main className={styles.page}>
@@ -72,6 +105,24 @@ export function PersonDetailsPage() {
           <section className={styles.transactionsSection}>
             <h2>Transações</h2>
             <TransactionList transactions={transactions} />
+          </section>
+
+          <section className={styles.deleteArea}>
+            <button
+              type="button"
+              className={styles.deleteButton}
+              onClick={handleDeletePerson}
+              disabled={isDeleting}
+            >
+              
+
+              {isDeleting ? "EXCLUINDO..." : "EXCLUIR PESSOA"}
+            </button>
+
+            <p className={styles.deleteWarning}>
+              Esta ação removerá {person.name} e também excluirá as transações
+              associadas.
+            </p>
           </section>
         </>
       )}
