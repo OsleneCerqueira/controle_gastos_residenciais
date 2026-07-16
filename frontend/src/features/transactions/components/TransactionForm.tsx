@@ -58,6 +58,8 @@ export function TransactionForm({people, isPeopleLoading, isSubmitting, serverEr
 
         if (!values.description.trim()) {
             validationErrors.description = "Informe a descrição da transação.";
+        } else if (values.description.trim().length > 200) {
+            validationErrors.description = "A descrição deve ter no máximo 200 caracteres.";
         }
 
         if (!values.value.trim()) {
@@ -123,6 +125,7 @@ export function TransactionForm({people, isPeopleLoading, isSubmitting, serverEr
                     id="description"
                     name="description"
                     type="text"
+                    maxLength={200}
                     value={values.description}
                     onChange={(event) => updateField("description", event.target.value)}
                     aria-invalid={Boolean(errors.description)}

@@ -56,6 +56,8 @@ export function PersonForm({
 
         if (!values.name.trim()) {
             validationErrors.name = "Informe o nome da pessoa.";
+        } else if (values.name.trim().length > 50) {
+            validationErrors.name = "O nome deve ter no máximo 50 caracteres.";
         }
 
         if (!values.age.trim()) {
@@ -63,8 +65,8 @@ export function PersonForm({
         } else {
             const age = Number(values.age);
 
-            if (!Number.isInteger(age) || age < 0) {
-                validationErrors.age = "Informe uma idade válida.";
+            if (!Number.isInteger(age) || age < 1 || age > 120) {
+                validationErrors.age = "A idade deve estar entre 1 e 120 anos.";
             }
         }
 
@@ -94,6 +96,7 @@ export function PersonForm({
                 <label htmlFor="name">  Nome  </label>
 
                 <input id="name" name="name" type="text" value={values.name}
+                    maxLength={50}
                     placeholder="Ex.: Maria Silva"
                     onChange={handleChange}
                     aria-invalid={Boolean(errors.name)}
@@ -109,7 +112,7 @@ export function PersonForm({
             <div className={styles.field}>
                 <label htmlFor="age"> Idade</label>
 
-                <input id="age" name="age" type="number" min="0" step="1" value={values.age}
+                <input id="age" name="age" type="number" min="1" max="120" step="1" value={values.age}
                     placeholder="Ex.: 25"
                     onChange={handleChange}
                     aria-invalid={Boolean(errors.age)} />

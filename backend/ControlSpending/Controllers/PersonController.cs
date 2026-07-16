@@ -58,22 +58,36 @@ namespace ControlSpending.Controllers
         // A list of all registered people.
         // </returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerator<Person>>> GetPeople()
+        public async Task<ActionResult<List<PersonResponse>>> GetPeople()
         {
-            var people = await _appDbContext.People.AsNoTracking().ToListAsync();
+            var people = await _appDbContext.People
+                .AsNoTracking()
+                .Select(person => new PersonResponse
+                {
+                    Id = person.Id,
+                    Name = person.Name,
+                    Age = person.Age
+                })
+                .ToListAsync();
 
             return Ok(people);
         }
 
-
+        
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<Person>> GetPerson(int id)
+        public async Task<ActionResult<PersonResponse>> GetPerson(int id)
         {
-            var person = await _appDbContext.People.FindAsync(id);
+            var person = await _appDbContext.People.AsNoTracking()
+                .Where(person => person.Id == id).Select(person => new PersonResponse
+                {
+                    Id = person.Id,
+                    Name = person.Name,
+                    Age = person.Age
+                }).FirstOrDefaultAsync();
 
             if (person == null)
             {
-                return NotFound("Pessoa não encontrada!");
+                return NotFound(new { message = "Pessoa não encontrada." });
             }
 
             return Ok(person);
@@ -85,7 +99,7 @@ namespace ControlSpending.Controllers
             var person = await _appDbContext.People.FindAsync(id);
             if (person == null)
             {
-                return NotFound("Pessoa não encontrada!");
+                return NotFound(new { message = "Pessoa não encontrada." });
             }
             _appDbContext.People.Remove(person);
 
