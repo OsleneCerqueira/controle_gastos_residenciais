@@ -7,6 +7,18 @@
   background-color: #ffffff;
 }
 
+.backLink {
+  display: inline-block;
+  margin-bottom: 32px;
+  color: #374151;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.backLink:hover {
+  color: #047857;
+}
+
 .header {
   margin-bottom: 32px;
 }
@@ -33,62 +45,29 @@
   line-height: 1.5;
 }
 
-.peopleSection {
+.formSection {
+  display: grid;
+  gap: 20px;
   padding-top: 24px;
   border-top: 1px solid #e5e7eb;
 }
 
 .sectionTitle {
-  margin: 0 0 20px;
+  margin: 0;
   color: #1f2937;
   font-size: 1.25rem;
 }
 
-.peopleList {
-  display: grid;
-  gap: 4px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.statusMessage {
-  color: #6b7280;
-}
-
 .errorMessage {
-  color: #b91c1c;
-}
-
-.peopleList {
-  display: grid;
-  gap: 4px;
   margin: 0;
-  padding: 0;
-  list-style: none;
+  padding: 12px;
+  color: #991b1b;
+  border-radius: 8px;
+  background-color: #fee2e2;
 }
 
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.actionLink {
-  flex: 1 1 200px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 0 20px;
-  color: #ffffff;
-  border-radius: 10px;
-  background-color: #111827;
+.temporaryMessage {
+  margin: 0;
+  color: #6b7280;
   font-size: 0.875rem;
-  font-weight: 700;
-}
-
-.actionLink:hover {
-  background-color: #263244;
 }

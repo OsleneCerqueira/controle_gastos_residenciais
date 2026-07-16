@@ -53,9 +53,14 @@ export function PeoplePage() {
                     Acompanhe as receitas, despesas e o saldo de cada pessoa.
                 </p>
 
-                <Link to="/people/new" className={styles.addPersonLink}>
-                    Adicionar pessoa
-                </Link>
+                <div className={styles.actions}>
+                    <Link to="/people/new" className={styles.actionLink}>
+                        Adicionar pessoa
+                    </Link>
+                    <Link to="/transactions/new" className={styles.actionLink}>
+                        Adicionar transação
+                    </Link>
+                </div>
 
             </header>
 

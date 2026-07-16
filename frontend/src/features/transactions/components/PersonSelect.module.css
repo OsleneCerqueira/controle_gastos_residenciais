@@ -1,0 +1,37 @@
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.field label {
+  color: #374151;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.field select {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  color: #1f2937;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background-color: #ffffff;
+  font: inherit;
+}
+
+.field select:focus {
+  border-color: #047857;
+  outline: 2px solid #d1fae5;
+}
+
+.field select:disabled {
+  cursor: not-allowed;
+  background-color: #f3f4f6;
+}
+
+.helperText {
+  margin: 0;
+  color: #b91c1c;
+  font-size: 0.75rem;
+}
