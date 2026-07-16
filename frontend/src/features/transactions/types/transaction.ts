@@ -13,3 +13,10 @@ export interface Transaction {
   personId: number;
   personName: string;
 }
+
+export interface CreateTransactionRequest {
+  description: string;
+  value: number;
+  type: TransactionType;
+  personId: number;
+}

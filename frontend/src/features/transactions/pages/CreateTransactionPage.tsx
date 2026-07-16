@@ -1,19 +1,25 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 import { getPeople } from "../../people/api/peopleApi";
 
 import type { Person } from "../../people/types/person";
 
-import { PersonSelect } from "../components/PersonSelect";
+import { createTransaction } from "../api/transactionApi";
+import { TransactionForm } from "../components/TransactionForm";
+
+import type { CreateTransactionRequest } from "../types/transaction";
 
 import styles from "./CreateTransactionPage.module.css";
 
 export function CreateTransactionPage() {
+    const navigate = useNavigate();
+
     const [people, setPeople] = useState<Person[]>([]);
-    const [selectedPersonId, setSelectedPersonId] = useState("");
-    const [isLoading, setIsLoading] = useState(true);
-    const [errorMessage, setErrorMessage] = useState("");
+    const [isPeopleLoading, setIsPeopleLoading] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [peopleError, setPeopleError] = useState("");
+    const [serverError, setServerError] = useState("");
 
     useEffect(() => {
         async function loadPeople(): Promise<void> {
@@ -25,14 +31,34 @@ export function CreateTransactionPage() {
                 const message =
                     error instanceof Error ? error.message : "Não foi possível buscar as pessoas.";
 
-                setErrorMessage(message);
+                setPeopleError(message);
             } finally {
-                setIsLoading(false);
+                setIsPeopleLoading(false);
             }
         }
 
         loadPeople();
     }, []);
+
+    async function handleCreateTransaction(
+        transaction: CreateTransactionRequest,
+    ): Promise<void> {
+        setIsSubmitting(true);
+        setServerError("");
+
+        try {
+            await createTransaction(transaction);
+
+            navigate("/people");
+        } catch (error) {
+            const message =
+                error instanceof Error? error.message: "Não foi possível cadastrar a transação.";
+
+            setServerError(message);
+        } finally {
+            setIsSubmitting(false);
+        }
+    }
 
     return (
         <main className={styles.page}>
@@ -55,22 +81,18 @@ export function CreateTransactionPage() {
                     Dados da transação
                 </h2>
 
-                {errorMessage && (
+                {peopleError ? (
                     <p className={styles.errorMessage} role="alert">
-                        {errorMessage}
+                        {peopleError}
                     </p>
-                )}
-
-                {!errorMessage && (
-                    <PersonSelect people={people} value={selectedPersonId}
-                        isLoading={isLoading}
-                        onChange={setSelectedPersonId} />
-                )}
-
-                {!isLoading && !errorMessage && people.length > 0 && (
-                    <p className={styles.temporaryMessage}>
-                     formulario
-                    </p>
+                ) : (
+                    <TransactionForm
+                        people={people}
+                        isPeopleLoading={isPeopleLoading}
+                        isSubmitting={isSubmitting}
+                        serverError={serverError}
+                        onSubmit={handleCreateTransaction}
+                    />
                 )}
             </section>
         </main>
